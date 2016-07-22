@@ -1,0 +1,5 @@
+## Interface: 50400
+## Title: Dark Souls Health Bar
+## Notes: A health bar replacement modelled after Dark Souls
+dshp.lua
+dshp.xml

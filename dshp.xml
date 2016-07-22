@@ -1,0 +1,264 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" 
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                   xsi:schemaLocation="http://www.blizzard.com/wow/ui/ 
+                   ..\..\FrameXML\UI.xsd">
+
+	<Script file="dshp.lua" />
+	<Frame name="DS_PlayerFrame">
+		<Size><AbsDimension x="512" y="50" /></Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" />
+		</Anchors>
+		<Frames>
+			<Frame name="DS_PlayerHealthBackground" frameStrata="BACKGROUND">
+				<Size><AbsDimension x="512" y="15" /></Size>
+				<Anchors><Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="71" y="-71" /></Anchors>
+				<Layers>
+					<Layer level="BACKGROUND">
+						<Texture file="Interface\ChatFrame\ChatFrameBackground" setAllPoints="true">
+							<Size><AbsDimension x="512" y="15" /></Size>
+							<Anchors><Anchor point="TOPLEFT" relativeTo="$parent" /></Anchors>
+							<Color r="0.1" g="0.1" b="0.1" a="1" />
+						</Texture>
+					</Layer>
+				</Layers>
+			</Frame>
+			<Frame name="DS_PlayerPowerBackground" frameStrata="BACKGROUND">
+				<Size><AbsDimension x="256" y="15" /></Size>
+				<Anchors><Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="71" y="-90" /></Anchors>
+				<Layers>
+					<Layer level="BACKGROUND">
+						<Texture file="Interface\ChatFrame\ChatFrameBackground" setAllPoints="true">
+							<Size><AbsDimension x="256" y="15" /></Size>
+							<Anchors><Anchor point="TOPLEFT" relativeTo="$parent" /></Anchors>
+							<Color r="0.1" g="0.1" b="0.1" a="1" />
+						</Texture>
+					</Layer>
+				</Layers>
+			</Frame>
+			<StatusBar name="DS_PlayerHealthBar">
+				<Size><AbsDimension x="512" y="15" /></Size>
+				<Anchors><Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="71" y="-71" /></Anchors>
+				<Layers>
+					<Layer level="OVERLAY">
+						<Texture file="Interface\addons\dshp\ds_healthbar_overlay" setAllPoints="true">
+							<Size><AbsDimension x="512" y="15" /></Size>
+							<Anchors><Anchor point="TOPLEFT" relativeTo="$parent" /></Anchors>
+							<Color r="1" g="0" b="0" a="1" />
+						</Texture>
+					</Layer>
+					<Layer level="OVERLAY">
+						<FontString name="DS_PlayerHealthString" font="Fonts\FRIZQT__.TTF" text="0" justifyH="LEFT" justifyV="MIDDLE">
+							<Size><AbsDimension x="512" y="15" /></Size>
+							<Anchors><Anchor point="TOPLEFT" relativeTo="$parent" /></Anchors>
+							<Color r="1" g="1" b="1" a="1" />
+							<FontHeight val="10" />
+							<Shadow>
+								<Offset x="1" y="1" />
+								<Color r="0" g="0" b="0" />
+							</Shadow>
+						</FontString>
+					</Layer>
+				</Layers>
+				<BarTexture file="Interface\TargetingFrame\UI-StatusBar">
+					<Size><AbsDimension x="512" y="15" /></Size>
+				</BarTexture>
+				<BarColor r="0.65" g="0.16" b="0.16" />
+			</StatusBar>
+			<StatusBar name="DS_PlayerPowerBar">
+				<Size><AbsDimension x="256" y="15" /></Size>
+				<Anchors><Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="71" y="-90" /></Anchors>
+				<Layers>
+					<Layer level="OVERLAY">
+						<Texture file="Interface\addons\dshp\ds_powerbar_overlay" setAllPoints="true">
+							<Size><AbsDimension x="256" y="15" /></Size>
+							<Anchors><Anchor point="TOPLEFT" relativeTo="$parent" /></Anchors>
+							<Color r="1" g="0" b="0" a="1" />
+						</Texture>
+					</Layer>
+					<Layer level="OVERLAY">
+						<FontString name="DS_PlayerPowerString" font="Fonts\FRIZQT__.TTF" text="0" justifyH="LEFT" justifyV="MIDDLE">
+							<Size><AbsDimension x="256" y="15" /></Size>
+							<Anchors><Anchor point="TOPLEFT" relativeTo="$parent" /></Anchors>
+							<Color r="1" g="1" b="1" a="1" />
+							<FontHeight val="10" />
+							<Shadow>
+								<Offset x="1" y="1" />
+								<Color r="0" g="0" b="0" />
+							</Shadow>
+						</FontString>
+					</Layer>
+				</Layers>
+				<BarTexture file="Interface\TargetingFrame\UI-StatusBar">
+					<Size><AbsDimension x="512" y="15" /></Size>
+				</BarTexture>
+				<BarColor r="0.35" g="0.6" b="0.45" />
+			</StatusBar>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				DS_PlayerFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+			</OnLoad>
+			<OnEvent>
+				DS_playerEventHandler(self, event, ...)
+			</OnEvent>
+		</Scripts>
+	</Frame>
+	<Frame name="DS_PlayerHealthFrameYellow" frameStrata="LOW">
+		<Size><AbsDimension x="512" y="50" /></Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" />
+		</Anchors>
+		<Frames>
+			<StatusBar name="DS_PlayerHealthBarYellow">
+				<Size><AbsDimension x="512" y="13" /></Size>
+				<Anchors><Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="71" y="-71" /></Anchors>
+				<BarTexture file="Interface\TargetingFrame\UI-StatusBar">
+					<Size><AbsDimension x="512" y="15" /></Size>
+				</BarTexture>
+				<BarColor r="0.5" g="0.5" b="0.1" />
+			</StatusBar>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				DS_initPlayerHealthFrameYellow()
+				self.TimeSinceLastUpdate = 0
+				self.TimeYellow = 0
+			</OnLoad>
+			<OnUpdate>
+				DS_animatePlayerHealthBarYellow(self, elapsed)
+			</OnUpdate>
+		</Scripts>
+	</Frame>
+	<Frame name="DS_PlayerAbsorbFrame" frameStrata="MEDIUM">
+		<Size><AbsDimension x="512" y="50" /></Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" />
+		</Anchors>
+		<Frames>
+			<StatusBar name="DS_PlayerAbsorbBar">
+				<Size><AbsDimension x="512" y="13" /></Size>
+				<Anchors><Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="71" y="-71" /></Anchors>
+				<BarTexture file="Interface\TargetingFrame\UI-StatusBar">
+					<Size><AbsDimension x="512" y="15" /></Size>
+				</BarTexture>
+				<BarColor r="0.5" g="0.7" b="0.9" />
+			</StatusBar>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				DS_initPlayerAbsorbFrame()
+			</OnLoad>
+		</Scripts>
+	</Frame>
+	<Frame name="DS_PlayerPowerFrameYellow" frameStrata="LOW">
+		<Size><AbsDimension x="256" y="50" /></Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" />
+		</Anchors>
+		<Frames>
+			<StatusBar name="DS_PlayerPowerBarYellow">
+				<Size><AbsDimension x="256" y="13" /></Size>
+				<Anchors><Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="71" y="-90" /></Anchors>
+				<BarTexture file="Interface\TargetingFrame\UI-StatusBar">
+					<Size><AbsDimension x="256" y="15" /></Size>
+				</BarTexture>
+				<BarColor r="0.5" g="0.5" b="0.1" />
+			</StatusBar>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				DS_initPlayerPowerFrameYellow()
+				self.TimeSinceLastUpdate = 0
+				self.TimeYellow = 0
+			</OnLoad>
+			<OnUpdate>
+				DS_animatePlayerPowerBarYellow(self, elapsed)
+			</OnUpdate>
+		</Scripts>
+	</Frame>
+	<Frame name="DS_BossHealthFrame">
+		<Size><AbsDimension x="1024" y="50" /></Size>
+		<Anchors>
+			<Anchor point="BOTTOM" />
+		</Anchors>
+		<Frames>
+			<StatusBar name="DS_BossHealthBar">
+				<Size><AbsDimension x="768" y="13" /></Size>
+				<!--<Anchors><Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="71" y="-37" /></Anchors>-->
+				<Anchors><Anchor point="BOTTOM" relativePoint="BOTTOM" x="0" y="80" /></Anchors>
+				<Layers>
+					<Layer level="OVERLAY">
+						<Texture file="Interface\addons\dshp\ds_bosshealthbar_overlay" setAllPoints="true">
+							<Size><AbsDimension x="768" y="13" /></Size>
+							<Anchors><Anchor point="TOPLEFT" relativeTo="$parent" /></Anchors>
+							<Color r="1" g="0" b="0" a="1" />
+						</Texture>
+					</Layer>
+					<Layer level="OVERLAY">
+						<FontString name="DS_BossHealthString" font="Fonts\FRIZQT__.TTF" text="0" justifyH="LEFT" justifyV="MIDDLE">
+							<Size><AbsDimension x="768" y="13" /></Size>
+							<Anchors><Anchor point="CENTER" relativeTo="$parent" /></Anchors>
+							<Color r="1" g="1" b="1" a="1" />
+							<FontHeight val="10" />
+							<Shadow>
+								<Offset x="1" y="1" />
+								<Color r="0" g="0" b="0" />
+							</Shadow>
+						</FontString>
+					</Layer>
+					<Layer>
+						<FontString name="DS_BossNameString" font="Fonts\FRIZQT__.TTF" text="" justifyH="LEFT" justifyV="MIDDLE">
+							<Size><AbsDimension x="768" y="13" /></Size>
+							<Anchors><Anchor point="CENTER" relativeTo="$parent" y="16" /></Anchors>
+							<Color r="1" g="1" b="1" a="1" />
+							<FontHeight val="14" />
+							<Shadow>
+								<Offset x="1" y="1" />
+								<Color r="0" g="0" b="0" />
+							</Shadow>
+						</FontString>
+					</Layer>
+				</Layers>
+				<BarTexture file="Interface\TargetingFrame\UI-StatusBar">
+					<Size><AbsDimension x="768" y="13" /></Size>
+				</BarTexture>
+				<BarColor r="0.5" g="0.1" b="0.05" />
+			</StatusBar>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				DS_initBossHealthFrame()
+			</OnLoad>
+			<OnEvent>
+				DS_bossEventHandler(self, event, ...)
+			</OnEvent>
+		</Scripts>
+	</Frame>
+	<Frame name="DS_BossHealthFrameYellow" frameStrata="LOW">
+		<Size><AbsDimension x="768" y="50" /></Size>
+		<Anchors>
+			<Anchor point="BOTTOM" />
+		</Anchors>
+		<Frames>
+			<StatusBar name="DS_BossHealthBarYellow">
+				<Size><AbsDimension x="768" y="13" /></Size>
+				<Anchors><Anchor point="BOTTOM" relativePoint="BOTTOM" x="0" y="80" /></Anchors>
+				<BarTexture file="Interface\TargetingFrame\UI-StatusBar">
+					<Size><AbsDimension x="768" y="13" /></Size>
+				</BarTexture>
+				<BarColor r="0.5" g="0.5" b="0.1" />
+			</StatusBar>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				DS_initBossHealthFrameYellow()
+				self.TimeSinceLastUpdate = 0
+				self.TimeYellow = 0
+			</OnLoad>
+			<OnUpdate>
+				DS_animateBossHealthBarYellow(self, elapsed)
+			</OnUpdate>
+		</Scripts>
+	</Frame>
+</Ui>
