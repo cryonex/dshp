@@ -1,7 +1,7 @@
 local bossGUID = nil
 local DS_BarAnimationDelay = 1 -- in seconds
 local DS_BarAnimationUpdateInterval = 0 -- in seconds
-local DS_BarAnimationPixelInc = 3 -- pixels to subtract per update
+local DS_BarAnimationPixelsPerSecond = 200
 
 -- Initialize player health frame
 function DS_initPlayerFrame()
@@ -18,7 +18,7 @@ function DS_initPlayerFrame()
 
 	PlayerFrameHealthBar:SetScript("OnShow", DS_hideEverything)
 	PlayerFrameManaBar:SetScript("OnShow", DS_hideEverything)
-	
+
 	--hooksecurefunc("UnitFrame_Initialize", DS_hideEverything)
 	--hooksecurefunc("UnitFrameHealthBar_Update", DS_hideEverything)
 	--hooksecurefunc("UnitFrameManaBar_Update", DS_hideEverything)
@@ -243,13 +243,12 @@ function DS_animatePlayerHealthBarYellow(self, elapsed)
 	if DS_PlayerHealthBar:GetValue() < DS_PlayerHealthBarYellow:GetValue() then
 		if self.TimeSinceLastUpdate < DS_BarAnimationDelay then
 			self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed
-		elseif self.TimeSinceLastUpdate >= DS_BarAnimationDelay then
-			if self.TimeYellow > DS_BarAnimationUpdateInterval then
-				DS_PlayerHealthBarYellow:SetValue(DS_PlayerHealthBarYellow:GetValue()-DS_getScaledAnimationIncrement(DS_PlayerHealthBar))
-				self.TimeYellow = 0
-			else
-				self.TimeYellow = self.TimeYellow + elapsed
-			end
+		else
+			DS_PlayerHealthBarYellow:SetValue(
+				DS_PlayerHealthBarYellow:GetValue() - DS_getScaledAnimationIncrement(
+					DS_PlayerHealthBar, elapsed
+				)
+			)
 		end
 	else
 		self.TimeSinceLastUpdate = 0
@@ -260,13 +259,12 @@ function DS_animatePlayerPowerBarYellow(self, elapsed)
 	if DS_PlayerPowerBar:GetValue() < DS_PlayerPowerBarYellow:GetValue() then
 		if self.TimeSinceLastUpdate < DS_BarAnimationDelay then
 			self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed
-		elseif self.TimeSinceLastUpdate >= DS_BarAnimationDelay then
-			if self.TimeYellow > DS_BarAnimationUpdateInterval then
-				DS_PlayerPowerBarYellow:SetValue(DS_PlayerPowerBarYellow:GetValue()-DS_getScaledAnimationIncrement(DS_PlayerPowerBar))
-				self.TimeYellow = 0
-			else
-				self.TimeYellow = self.TimeYellow + elapsed
-			end
+		else
+			DS_PlayerPowerBarYellow:SetValue(
+				DS_PlayerPowerBarYellow:GetValue() - DS_getScaledAnimationIncrement(
+					DS_PlayerPowerBar, elapsed
+				)
+			)
 		end
 	else
 		self.TimeSinceLastUpdate = 0
@@ -277,22 +275,21 @@ function DS_animateBossHealthBarYellow(self, elapsed)
 	if DS_BossHealthBar:GetValue() < DS_BossHealthBarYellow:GetValue() then
 		if self.TimeSinceLastUpdate < DS_BarAnimationDelay then
 			self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed
-		elseif self.TimeSinceLastUpdate >= DS_BarAnimationDelay then
-			if self.TimeYellow > DS_BarAnimationUpdateInterval then
-				DS_BossHealthBarYellow:SetValue(DS_BossHealthBarYellow:GetValue()-DS_getScaledAnimationIncrement(DS_BossHealthBar))
-				self.TimeYellow = 0
-			else
-				self.TimeYellow = self.TimeYellow + elapsed
-			end
+		else
+			DS_BossHealthBarYellow:SetValue(
+				DS_BossHealthBarYellow:GetValue() - DS_getScaledAnimationIncrement(
+					DS_BossHealthBar, elapsed
+				)
+			)
 		end
 	else
 		self.TimeSinceLastUpdate = 0
 	end
 end
 
-function DS_getScaledAnimationIncrement(bar)
+function DS_getScaledAnimationIncrement(bar, elapsed)
 	local minValue, maxValue = bar:GetMinMaxValues()
-	local incPixelRatio = DS_BarAnimationPixelInc / bar:GetWidth()
+	local incPixelRatio = (elapsed * DS_BarAnimationPixelsPerSecond) / bar:GetWidth()
 	local scaledIncrement = incPixelRatio * maxValue
 	return scaledIncrement
 end
@@ -350,4 +347,3 @@ end
 
 function DS_trigger_animateYellowHealthBar(self, elasped)
 end
-
