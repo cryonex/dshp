@@ -30,6 +30,9 @@ function DS_initPlayerFrame()
 	hooksecurefunc("HideTextStatusBarText", DS_hideEverything)
 	hooksecurefunc("UnitFrameHealPredictionBars_Update", DS_hideEverything)
 	hooksecurefunc("UnitFrame_UpdateThreatIndicator", DS_hideEverything)
+	hooksecurefunc("PlayerFrame_UpdateStatus", DS_hidePlayerFrameGlow)
+
+	DS_hidePlayerFrameGlow()
 
 	local point, relativeTo, relativePoint, xOfs, yOfs = PlayerFrame:GetPoint()
 	DS_PlayerFrame:SetPoint(point, relativeTo, relativePoint, 0, 50)
@@ -59,6 +62,11 @@ function DS_hideEverything()
 	PlayerFrameTotalAbsorbBar:Hide()
 	PlayerFrameOverAbsorbGlow:Hide()
 	PlayerFrame.threatIndicator:Hide()
+end
+
+function DS_hidePlayerFrameGlow()
+	PlayerStatusTexture:Hide()
+	PlayerStatusGlow:Hide()
 end
 
 function DS_initPlayerHealthFrameYellow()
